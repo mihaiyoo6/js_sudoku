@@ -1,0 +1,24 @@
+{
+  "name": "js_sudoku",
+  "version": "0.0.1",
+  "description": "JS sudoku game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mihaiyoo6/js_sudoku.git"
+  },
+  "keywords": [
+    "js",
+    "sudoku",
+    "game"
+  ],
+  "author": "Mihai Mijea <mijeamihai@yahoo.com> (http://mijeamihai.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mihaiyoo6/js_sudoku/issues"
+  },
+  "homepage": "https://github.com/mihaiyoo6/js_sudoku#readme"
+}
