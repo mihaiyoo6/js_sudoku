@@ -8,6 +8,7 @@ let main = (function(){
 		boardContainer:'.js-board-container'
 	};
 	function init(){
+		sudoku.generateBoard();
 		$(selectors.boardContainer).append(sudoku.generateGUI());
 	}
 	//public interface
