@@ -1,10 +1,19 @@
 const $ = require('jquery');
+const sudoku  = require('./sudoku');
+jQuery = $
+require('bootstrap');
 
-let count = 0;
-let countHolder = $('#count');
+let main = (function(){
+	const selectors = {
+		boardContainer:'.js-board-container'
+	};
+	function init(){
+		$(selectors.boardContainer).append(sudoku.generateGUI());
+	}
+	//public interface
+	return{
+		init
+	}
+})();
 
-$('#test').click( ()=>{
-
-	count++;
-	countHolder.text(count +' clicks ');
-});
+main.init();

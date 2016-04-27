@@ -2,13 +2,37 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/style.css">
 	<title>[MM] - Sudoku JS - Game</title>
 </head>
 <body>
-<h1>Express FTW!</h1>
-Click count: <span id="count">0</span>
-<button id="test">TEST CLICK</button>
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">SUDOKU</a>
+		</div>
+	</div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+	<div class="row">
+		<h4>Select Level:</h4>
+		<div class="col-md-4 col-sm-1">
+			<button type="button" class="btn btn-info">Level 1</button>
+		</div>
+		<div class="col-md-4 col-sm-1">
+			<button type="button" class="btn btn-success">level 2</button>
+		</div>
+		<div class="col-md-4 col-sm-1">
+			<button type="button" class="btn btn-warning">Warning</button>
+		</div>
+	</div>
+	<div class="board js-board-container" style="display: inline-block">
 
+	</div>
+</div>
 </body>
 <script src="/js/bundle.js"></script>
 </html>

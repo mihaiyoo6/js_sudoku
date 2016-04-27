@@ -3,8 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const path = require('path');
 module.exports = {
 	entry: [
-		"./src/js/main",
-		"./src/js/game"],
+		"./src/js/main"],
 	output: {
 		path: __dirname,
 		filename: "public/js/bundle.js"
@@ -25,7 +24,9 @@ module.exports = {
 			{ root: __dirname, verbose: true, dry: false }
 		),
 		new CopyWebpackPlugin([
-			{ from: './src/html/index.html', to: './public' }
+			{ from: './src/html/', to: './public' },
+			{ from: './src/css/', to: './public/css' },
+			{ from: './src/images/', to: './public/images' }
 		])
 	]
 };

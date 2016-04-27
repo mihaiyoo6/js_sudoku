@@ -1,38 +1,37 @@
 {
-  "name": "js_sudoku",
-  "version": "0.0.1",
-  "description": "JS sudoku game",
-  "main": "app.js",
-  "scripts": {
-    "serve": "node app.js",
-    "dev": "node app.js && wepback -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mihaiyoo6/js_sudoku.git"
-  },
-  "keywords": [
-    "js",
-    "sudoku",
-    "game"
-  ],
-  "author": "Mihai Mijea <mijeamihai@yahoo.com> (http://mijeamihai.com/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mihaiyoo6/js_sudoku/issues"
-  },
-  "homepage": "https://github.com/mihaiyoo6/js_sudoku#readme",
-  "dependencies": {
-    "bootstrap": "3.3.6",
-    "express": "4.13.4",
-    "jquery": "2.2.3",
-    "webpack": "1.13.0"
-  },
-  "devDependencies": {
-    "babel-core": "6.7.7",
-    "babel-loader": "6.2.4",
-    "clean-webpack-plugin": "0.1.9",
-    "copy-webpack-plugin": "2.1.3"
-  }
+	"name": "js_sudoku",
+	"version": "0.0.1",
+	"description": "JS sudoku game",
+	"main": "app.js",
+	"scripts": {
+		"serve": "node app.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mihaiyoo6/js_sudoku.git"
+	},
+	"keywords": [
+		"js",
+		"sudoku",
+		"game"
+	],
+	"author": "Mihai Mijea <mijeamihai@yahoo.com> (http://mijeamihai.com/)",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mihaiyoo6/js_sudoku/issues"
+	},
+	"homepage": "https://github.com/mihaiyoo6/js_sudoku#readme",
+	"dependencies": {
+		"bootstrap": "3.3.6",
+		"express": "4.13.4",
+		"jquery": "2.2.3",
+		"webpack": "1.13.0"
+	},
+	"devDependencies": {
+		"babel-core": "6.7.7",
+		"babel-loader": "6.2.4",
+		"clean-webpack-plugin": "0.1.9",
+		"copy-webpack-plugin": "2.1.3"
+	}
 }
