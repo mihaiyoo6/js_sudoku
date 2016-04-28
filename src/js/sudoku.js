@@ -88,12 +88,11 @@ function generateEmptyBoard(callback){
 }
 
 function populateBoard(){
-	for(let i = 0; i < letters.length; i++){
-		for(let j = 0; j < digits.length; j++){
-
-			let position = letters[i]+digits[j];
-			board[position] = generateValue(position);
-		}
+	let i = 0;
+	let boardLen = positions.length;
+	while(i < boardLen){
+		board[positions[i]] = generateValue(positions[i]);
+		i++;
 	}
 	return board;
 }
@@ -112,14 +111,16 @@ function checkLine(position, value){
 	let rowIdentifier = position.charAt(0);
 	let colIdentifier = position.charAt(1);
 	let boardLen = positions.length;
-	for(var i = 0; i < boardLen; i++){
+	let i = 0;
+	while( i < boardLen ){
 
-		if(positions[i].indexOf(rowIdentifier) !== -1){
-			row.push(board[positions[i]]);
-		}
-		//if(positions[i].indexOf(colIdentifier) !== -1){
-		//	col.push(board[positions[i]]);
+		//if(positions[i].indexOf(rowIdentifier) !== -1){
+		//	row.push(board[positions[i]]);
 		//}
+		if(positions[i].indexOf(colIdentifier) !== -1){
+			col.push(board[positions[i]]);
+		}
+		i++
 	}
 	return ($.inArray(value, row) === -1) && ($.inArray(value, col) === -1);
 }
