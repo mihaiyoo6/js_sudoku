@@ -1,14 +1,16 @@
 'use strict';
 const $ = require('jquery');
-let board = [];
+let board = {};
+let positions = [];
 let digits = [1,2,3,4,5,6,7,8,9];
 let letters = ['A','B','C','D','E','F','G','H','I'];
 let selectors = {
 	input : '.js-value-input'
 };
 module.exports = {
-	generateGUI,
-	generateBoard
+	generateEmptyBoard,
+	populateBoard,
+	generateGUI
 };
 
 function generateGUI(){
@@ -31,11 +33,11 @@ function generateGUI(){
 			if(j !== 0 && j % 3 == 0){
 				cellClass += ' big-border';
 			}
-
+			let position = letters[i]+digits[j];
 			let cell = $('<div />',
 				{"class": cellClass,
-				text: board[letters[i]+digits[j]],
-				"data-possition": letters[i]+digits[j],
+				text: board[position],
+				"data-position": position,
 				click: clickCell});
 
 			cells.push( cell );
@@ -69,23 +71,60 @@ function clickCell(e){
 
 }
 
-function generateBoard(){
-
+function generateEmptyBoard(callback){
 	let boardLen = 0;
 
 	for(let i = 0; i < letters.length; i++){
 		for(let j = 0; j < digits.length; j++){
-			let randomVal = Math.floor(Math.random() * 8);
-			board[letters[i]+digits[j]] = digits[randomVal];
+			board[letters[i]+digits[j]] = null;
 			boardLen ++;
 		}
 	}
-
+	positions = Object.keys(board);
+	if(typeof callback ==='function'){
+		callback();
+	}
 	return board;
 }
 
+function populateBoard(){
+	for(let i = 0; i < letters.length; i++){
+		for(let j = 0; j < digits.length; j++){
 
-function checkRow(){}
-function checkColumn(){}
-function check3X3Square(){}
+			let position = letters[i]+digits[j];
+			board[position] = generateValue(position);
+		}
+	}
+	return board;
+}
+function generateValue(position){
+	let value = Math.floor(Math.random() * (9 - 1 + 1) + 1);
+	if(checkLine(position, value)){
+		return value;
+	}else{
+		return generateValue(position);
+	}
+}
+
+function checkLine(position, value){
+	let row = [];
+	let col = [];
+	let rowIdentifier = position.charAt(0);
+	let colIdentifier = position.charAt(1);
+	let boardLen = positions.length;
+	for(var i = 0; i < boardLen; i++){
+
+		if(positions[i].indexOf(rowIdentifier) !== -1){
+			row.push(board[positions[i]]);
+		}
+		//if(positions[i].indexOf(colIdentifier) !== -1){
+		//	col.push(board[positions[i]]);
+		//}
+	}
+	return ($.inArray(value, row) === -1) && ($.inArray(value, col) === -1);
+}
+
+function check3X3Square(){
+	return true
+}
 
