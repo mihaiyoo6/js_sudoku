@@ -26,7 +26,8 @@ body{
 	z-index: 1;
 }
 
-.board-cell:hover{
+.board-cell:hover,
+.board-cell:focus{
 	z-index: 3;
 	transform:scale(1.2);
 	border: 1px solid #2aabd2;
@@ -35,6 +36,15 @@ body{
 
 .board-cell:disabled{
 	color: #2aabd2;
+}
+.board-input-invalid{
+	background-color: #880000;
+	color: #FC1465;
+	transform:scale(1.2);
+	z-index: 3;
+}
+.board-cell-item-invalid{
+	background-color: #FFD1E1;
 }
 .board-cell.big-border{
 	margin-left: 10px;

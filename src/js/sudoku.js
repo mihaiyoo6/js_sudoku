@@ -43,7 +43,7 @@ function generateGUI(){
 	for(let i = 0; i < letters.length; i++){
 
 		let cells =[];
-		let rowClass =['board-row', ['js-row', letters[i]].join('-')].join(' ');
+		let rowClass ='board-row';
 
 		if(i !== 0 && i % 3 == 0){
 			rowClass += ' big-border';
@@ -52,7 +52,7 @@ function generateGUI(){
 		let row = $('<div />',{"class": rowClass});
 
 		for(let j = 0; j < digits.length; j++){
-			let cellClass =['board-cell','js-cell', ['js-cell',letters[i], digits[j]].join('-')].join(' ');
+			let cellClass =['board-cell','js-cell', ['js-row', letters[i]].join('-'), ['js-col', digits[j]].join('-'), ['js-cell',letters[i], digits[j]].join('-')].join(' ');
 
 			if(j !== 0 && j % 3 == 0){
 				cellClass += ' big-border';
@@ -68,9 +68,13 @@ function generateGUI(){
 				"data-value": boardGenerated[p],
 				"disabled": !isMaks,
 				"maxlength": 1,
-				"keypress": function(){
-					//force only numbers
-					return event.charCode >= 48 && event.charCode <= 57;
+				"keypress": (e)=>{
+					//force only numbers & overite value if new value is number
+					if(e.charCode >= 49 && e.charCode <= 57){
+						e.target.value = String.fromCharCode(e.which);
+					}else{
+						return false;
+					}
 				},
 				"keyup": _checkValue
 			});
@@ -86,14 +90,41 @@ function generateGUI(){
 }
 
 function _checkValue(e){
-
+	console.log('change');
 	let target = $(e.target);
-	let value = target.val();
+	let value = parseInt(target.val());
 	let position = target.data('position');
+	let isColValid = _checkLine(position, value).col.valid;
+	let isRowValid = _checkLine(position, value).row.valid;
+	let isBlockValid = _checkBlock(position, value).block.valid;
 
-	console.log('position', position,'Value', value);
-	console.log('validation line',_checkLine(position, value));
-	console.log('validation block', _checkBlock(position, value));
+	console.log('isColValid', isColValid, 'isRowValid',isRowValid,'isBlockValid',isBlockValid);
+	_resetUi();
+
+	if(!isRowValid){
+		let row = _getRow(position);
+		row.each((index,rowItem) => {
+			$(rowItem).addClass("board-cell-item-invalid");
+		} );
+	}
+
+	if(!isColValid){
+		let col = _getCol(position);
+		col.each((index,colItem) => {
+			$(colItem).addClass("board-cell-item-invalid");
+		} );
+	}
+
+	if(!isBlockValid){
+		let block = _getBlock(position);
+		for(let i = 0; i < block.length; i++){
+			$(block[i]).addClass("board-cell-item-invalid");
+		}
+	}
+	if(!isColValid || !isRowValid || !isBlockValid){
+		target.addClass('board-input-invalid');
+	}
+
 }
 
 function _checkLine(position, value){
@@ -126,18 +157,54 @@ function _checkLine(position, value){
 }
 
 function _checkBlock(position, value){
+	let block = [];
+	for(let i = 0; i< blocks.length; i++){
+		let foundBlock = blocks[i];
+		if(_inArray(position,foundBlock)){
+			for(let j = 0; j<foundBlock.length; j++){
+				block.push(board[foundBlock[j]]);
+			}
+		}
+	}
 
+	return {
+		block:{
+			"valid": !_inArray(value, block),
+			"block": block
+		}
+	};
+}
+
+function _resetUi(){
+	$('.js-cell').each((index, cellItem)=> {
+		$(cellItem).removeClass('board-cell-item-invalid')
+		$(cellItem).removeClass('board-input-invalid');
+	});
 }
 
 function _getRow(position){
+	let selector = ['.js-row', position.charAt(0)].join('-');
+	return $(selector)
 
 }
 function _getCol(position){
-
+	let selector = ['.js-col', position.charAt(1)].join('-');
+	return $(selector)
 }
 
 function _getBlock(position){
+	let block = [];
 
+	for(let i = 0; i< blocks.length; i++){
+		let foundBlock = blocks[i];
+		if(_inArray(position,foundBlock)){
+			for(let j = 0; j<foundBlock.length; j++){
+				let selector = ['.js-cell', foundBlock[j].charAt(0), foundBlock[j].charAt(1)].join('-');
+				block.push($(selector));
+			}
+		}
+	}
+	return block;
 }
 
 function _generateMask(level){
