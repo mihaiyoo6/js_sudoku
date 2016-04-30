@@ -8,8 +8,10 @@ let main = (function(){
 		boardContainer:'.js-board-container'
 	};
 	function init(){
-		sudoku.generateEmptyBoard(sudoku.populateBoard);
-		//sudoku.populateBoard;
+		sudoku.init({
+			mask: true,
+			level: 1
+		});
 		$(selectors.boardContainer).append(sudoku.generateGUI());
 	}
 	//public interface
@@ -19,3 +21,4 @@ let main = (function(){
 })();
 
 main.init();
+window.sudoku = sudoku;

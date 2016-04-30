@@ -25,11 +25,16 @@ body{
 	position: relative;
 	z-index: 1;
 }
+
 .board-cell:hover{
 	z-index: 3;
 	transform:scale(1.2);
 	border: 1px solid #2aabd2;
 
+}
+
+.board-cell:disabled{
+	color: #2aabd2;
 }
 .board-cell.big-border{
 	margin-left: 10px;
@@ -38,14 +43,6 @@ body{
 	margin-top: 10px;
 }
 
-.value-input{
-	width: 50px;
-	text-align: center;
-	position: absolute;
-	margin-top: -1px;
-	z-index: 2;
-	margin-left: -33px;
-}
 .noselect {
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none;   /* Chrome/Safari/Opera */
