@@ -4,6 +4,7 @@ let board = {};
 let positions = [];
 let digits = [1,2,3,4,5,6,7,8,9];
 let letters = ['A','B','C','D','E','F','G','H','I'];
+let values = [];
 let selectors = {
 	input : '.js-value-input'
 };
@@ -90,19 +91,52 @@ function generateEmptyBoard(callback){
 function populateBoard(){
 	let i = 0;
 	let boardLen = positions.length;
-	while(i < boardLen){
-		board[positions[i]] = generateValue(positions[i]);
-		i++;
+	while(0 < i < boardLen){
+		let position = positions[i];
+		let generatedValue = generateValue(position);
+
+		if(generatedValue.back){
+			console.log('goBack');
+			i--cd;
+			for(let j = i; j < boardLen; j++){
+				board[positions[j]] = null;
+			}
+			generatedValue = generateValue(position);
+		}else{
+			board[position] = generatedValue.value;
+			i++;
+		}
 	}
 	return board;
 }
 function generateValue(position){
+	let result = {};
 	let value = Math.floor(Math.random() * (9 - 1 + 1) + 1);
-	if(checkLine(position, value)){
-		return value;
-	}else{
-		return generateValue(position);
+
+	//push unique
+	if( ($.inArray(value, values) === -1) ){
+		values.push(value);
 	}
+
+	if(_compareArrs(values, digits)){
+		result.back = true;
+		result.value = null;
+		values = [];
+	}else{
+		if(checkLine(position, value)){
+			result.value = value;
+			result.back = false;
+			values = [];
+		}else{
+			//push unique
+			if( ($.inArray(value, values) === -1) ){
+				values.push(value);
+			}
+			return generateValue(position);
+		}
+	}
+
+	return result;
 }
 
 function checkLine(position, value){
@@ -114,9 +148,9 @@ function checkLine(position, value){
 	let i = 0;
 	while( i < boardLen ){
 
-		//if(positions[i].indexOf(rowIdentifier) !== -1){
-		//	row.push(board[positions[i]]);
-		//}
+		if(positions[i].indexOf(rowIdentifier) !== -1){
+			row.push(board[positions[i]]);
+		}
 		if(positions[i].indexOf(colIdentifier) !== -1){
 			col.push(board[positions[i]]);
 		}
@@ -129,3 +163,6 @@ function check3X3Square(){
 	return true
 }
 
+function _compareArrs(arr1, arr2){
+	return $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0
+}
