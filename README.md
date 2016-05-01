@@ -19,6 +19,7 @@ For lastes build:
 ```sh
 $ npm run build
 ```
+Open your browser : [http://localhost:3000]
 
 ### Version
 0.0.1
@@ -56,6 +57,7 @@ MIT
    [jQuery]: <http://jquery.com>
    [express]: <http://expressjs.com>
    [webpack]: <https://webpack.github.io/>
+   [http://localhost:3000]: <http://localhost:3000> 
 
 
 
