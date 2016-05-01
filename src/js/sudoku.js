@@ -42,7 +42,6 @@ module.exports = {
  * @param config - Object
  */
 function init (config) {
-	console.log('sudoku:init:config', config);
 	gConfig = config;
 	boardGenerated = sudoku.generateSolution();
 	boardLen = boardGenerated.length;
@@ -179,7 +178,6 @@ function _checkValue (e) {
 	if (!isColValid || !isRowValid || !isBlockValid) {
 		target.addClass('board-input-invalid');
 	} else {
-		console.log('answers', answers);
 		target.removeClass('board-input-invalid');
 		board[position] = value;
 		answers = previousPos === position ? answers : answers - 1;
