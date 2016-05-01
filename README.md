@@ -13,7 +13,12 @@ $ cd js_sudoku
 $ npm i 
 $ npm run serve
 ```
-    
+   
+For lastes build: 
+
+```sh
+$ npm run build
+```
 
 ### Version
 0.0.1
