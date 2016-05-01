@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link href="/css/bootstrap-switch.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="/css/style.css">
 	<title>[MM] - Sudoku JS - Game</title>
 </head>
@@ -14,6 +15,19 @@
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#">SUDOKU</a>
 		</div>
+		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="#" class="js-new-game">New Game</a></li>
+					<li><a href="#" data-toggle="modal" data-target="#levelModal">Level</a></li>
+					<li><a href="#"  data-toggle="modal" data-target="#videoModal" data-theVideo="https://www.youtube.com/embed/xPk8ZH7iD_Y">Tutorial</a></li>
+					<li><a href="#" class="js-auto-solve">Auto solve</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="#" data-toggle="modal" data-target="#devModal">Developer settings</a></li>
+				</ul>
+			</li>
+		</ul>
 	</div><!-- /.container-fluid -->
 </nav>
 <div class="container">
@@ -21,9 +35,15 @@
 
 		<div class="row">
 			<div class="progress">
-				<div class="progress-bar js-game-progress" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-					0%
+				<div class="progress-bar js-game-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
 				</div>
+			</div>
+		</div>
+		<div class="finished-game-container js-finished-game-container">
+			<div class="overlay"></div>
+			<div class="new-game">
+				<img src="/images/finished.gif" alt="goodJOB"/>
+				<button class="btn btn-lg btn-primary js-new-game">New Game</button>
 			</div>
 		</div>
 
@@ -33,6 +53,90 @@
 	</div>
 
 </div>
+<!--DEV MODAL-->
+<!-- Modal -->
+<div class="modal fade" id="devModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Developer settings</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="devMode">Developer MODE</label>
+					<input type="checkbox" name="devMode" id="devMode" >
+				</div>
+				<div class="form-group">
+					<label for="devHint">Show tooltip hints</label>
+					<input type="checkbox" name="devHint" id="devHint" checked disabled>
+				</div>
+				<div class="form-group">
+					<label for="devHint">Empty cells</label>
+					<label class="radio-inline">
+						<input type="radio" name="devLevels" value="2" disabled checked> 2
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="devLevels"  value="6" disabled> 6
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="devLevels" value="20" disabled> 20
+					</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary js-devSettings-save">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal LEVELS -->
+<div class="modal fade" id="levelModal" tabindex="-1" role="dialog" aria-labelledby="levelModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="levelModalLabel">Select Level</h4>
+			</div>
+			<div class="modal-body">
+
+				<div class="form-group">
+					<label class="radio-inline">
+						<input type="radio" name="gameLevels" value="1" checked> Easy
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="gameLevels" value="2"> Medium
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="gameLevels" value="3"> Hard
+					</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary js-level-selected">Start</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal Tutorial -->
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Sudoku Tutorial</h4>
+			</div>
+			<div class="modal-body">
+				<iframe width="100%" height="350" src=""></iframe>
+			</div>
+
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
 <script src="/js/bundle.js"></script>
+<script src="/js/bootstrap-switch.min.js"></script>
 </html>

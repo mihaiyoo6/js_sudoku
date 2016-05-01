@@ -7,7 +7,8 @@ let boardLen = null;
 let positions = [];
 let mask = [];
 let answers = null;
-let devMode = false;
+let gConfig = {};
+let previousPos = null;
 let digits = [1,2,3,4,5,6,7,8,9];
 let letters = ['A','B','C','D','E','F','G','H','I'];
 
@@ -29,29 +30,32 @@ let selectors = {
 };
 module.exports = {
 	init,
-	generateGUI
+	generateGUI,
+	autoSolve
 };
 function init(config){
-
-	devMode = config.devMode;
+	console.log('sudoku:init:config', config);
+	gConfig = config;
 	boardGenerated = sudoku.generateSolution();
 	boardLen = boardGenerated.length;
 	positions = _generatePosArr();
-
-	mask =config.mask ? _generateMask(config.level) : mask;
+	previousPos = null;
+	mask = config.mask ? _generateMask(config.level) : mask;
 	answers = mask.length;
+	_updateGameStatus(answers);
 
 }
 function generateGUI(){
 	let boardUI = [];
 	let p = 0;
+	$('.js-finished-game-container').fadeOut();
 	for(let i = 0; i < letters.length; i++){
 
 		let cells =[];
 		let rowClass ='board-row';
 
 		if(i !== 0 && i % 3 == 0){
-			rowClass += ' big-border';
+			rowClass += ' big-border js-big-border';
 		}
 
 		let row = $('<div />',{"class": rowClass});
@@ -60,7 +64,7 @@ function generateGUI(){
 			let cellClass =['board-cell','js-cell', ['js-row', letters[i]].join('-'), ['js-col', digits[j]].join('-'), ['js-cell',letters[i], digits[j]].join('-')].join(' ');
 
 			if(j !== 0 && j % 3 == 0){
-				cellClass += ' big-border';
+				cellClass += ' big-border js-big-border';
 			}
 			let position = letters[i]+digits[j];
 			let isMaks = _inArray(p, mask);
@@ -73,9 +77,10 @@ function generateGUI(){
 				"data-value": boardGenerated[p],
 				"data-toggle":"tooltip",
 				"data-placement":"top",
-				"title": boardGenerated[p],
+				"title": gConfig.devMode? boardGenerated[p] : '',
 				"disabled": !isMaks,
 				"maxlength": 1,
+				"change": _checkValue,
 				"keydown": _removeValue,
 				"keypress": (e)=>{
 					//force only numbers & overite value if new value is number
@@ -111,7 +116,7 @@ function _removeValue(e){
 
 			let position = $(e.target).data('position');
 			board[position] = null;
-			answers++;
+			answers = previousPos === position ? answers : answers+1;
 			_updateGameStatus(answers);
 		}
 }
@@ -125,7 +130,7 @@ function _checkValue(e){
 	let isRowValid = _checkLine(position, value).row.valid;
 	let isBlockValid = _checkBlock(position, value).block.valid;
 	board[position] = null;
-	console.log('isColValid', isColValid, 'isRowValid',isRowValid,'isBlockValid',isBlockValid);
+	//console.log('isColValid', isColValid, 'isRowValid',isRowValid,'isBlockValid',isBlockValid);
 	_resetUi();
 
 	if(!isRowValid){
@@ -150,11 +155,12 @@ function _checkValue(e){
 	}
 	if(!isColValid || !isRowValid || !isBlockValid){
 		target.addClass('board-input-invalid');
-		answers ++;
 	}else{
+		console.log('answers',answers);
 		target.removeClass('board-input-invalid');
 		board[position] = value;
-		answers --;
+		answers = previousPos === position ? answers : answers-1;
+		previousPos = position;
 	}
 
 	_updateGameStatus(answers);
@@ -162,7 +168,7 @@ function _checkValue(e){
 
 function _updateGameStatus(answers){
 	if(answers < 0){
-		answers =0;
+		answers = 0;
 	}
 	let maskLen = mask.length;
 	let procent = (maskLen - answers)*100 /maskLen;
@@ -171,13 +177,21 @@ function _updateGameStatus(answers){
 	}
 	procent += '%';
 	$('.js-game-progress').css('width', procent);
-	$('.js-game-progress').text(procent);
 
 	if(answers == 0){
-		alert('Congrats');
+		gameFinished();
 	}
+}
 
-	console.log('procent',procent);
+
+function gameFinished(){
+	$('.js-cell').prop('disabled', 'disabled');
+	$('.js-cell').addClass('finished');
+
+	setTimeout(()=>{
+		$('.js-finished-game-container').fadeIn();
+	},750);
+
 }
 
 function _checkLine(position, value){
@@ -265,8 +279,8 @@ function _generateMask(level){
 		level = 3;
 	}
 	let emptyCells = 13 + 17 * level;
-	if (devMode){
-		emptyCells = 2;
+	if (gConfig.devMode && gConfig.devEmptyCells){
+		emptyCells = gConfig.devEmptyCells;
 	}
 	let emptyCellsPos = [];
 
@@ -287,29 +301,54 @@ function _generateMask(level){
 	return emptyCellsPos;
 }
 
+function autoSolve(){
+	let firstEmptyCell = _getFirstEmptyCell();
+	let cellSelector = "";
+	try{
+		cellSelector = ['.js-cell', firstEmptyCell.charAt(0), firstEmptyCell.charAt(1)].join('-');
+	}catch (e) {
+		$('.js-game-progress').css('width', '100%');
+		gameFinished();
+	}
+
+	let cell = $(cellSelector);
+	let correctValue = cell.data('value');
+	doSetTimeout(cell,1,correctValue);
+
+}
+function doSetTimeout(cell, tries, correctValue) {
+	if(tries <= correctValue){
+		setTimeout(()=>{
+			cell.val(tries);
+			cell.change();
+			if(tries === correctValue && answers > 0){
+				autoSolve();
+			}
+			tries++;
+			doSetTimeout(cell,tries,correctValue);
+		},20);
+	}
+}
+
+function _getFirstEmptyCell(){
+	let firstEmptyCell = null;
+	for (let i = 0; i < boardLen; i++){
+		if(board[positions[i]] === ""){
+
+			firstEmptyCell = positions[i];
+			break;
+		}
+	}
+	return firstEmptyCell;
+}
+
 
 function _inArray(value, arr){
 	return $.inArray(value, arr) !== -1;
 }
 
-function _compareArrs(arr1, arr2){
-	return $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0
-}
-
 function _getRandomInt(min, max){
 	return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-function _intToPos(int){
-	let comp = 0;
-	for(let i=0; i< letters.length; i++){
-		for (let j = 0; j < digits.length; j++){
-			if(int === comp){
-				return letters[i]+digits[j];
-			}
-			comp+=1;
-		}
-	}
 }
 
 function _generatePosArr(){

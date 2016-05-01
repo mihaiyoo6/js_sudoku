@@ -27,7 +27,8 @@ module.exports = {
 		new CopyWebpackPlugin([
 			{ from: './src/html/', to: './public' },
 			{ from: './src/css/', to: './public/css' },
-			{ from: './src/images/', to: './public/images' }
+			{ from: './src/images/', to: './public/images' },
+			{ from: './src/js/bootstrap-switch.min.js', to: './public/js/' }
 		])
 	]
 };
