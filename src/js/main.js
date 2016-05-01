@@ -1,8 +1,8 @@
 const $ = require('jquery');
 const sudoku  = require('./sudoku');
-jQuery = $
+jQuery = $;
 require('bootstrap');
-
+let devMode = true;
 let main = (function(){
 	const selectors = {
 		boardContainer:'.js-board-container'
@@ -10,9 +10,13 @@ let main = (function(){
 	function init(){
 		sudoku.init({
 			mask: true,
-			level: 1
+			level: 1,
+			devMode: devMode
 		});
 		$(selectors.boardContainer).append(sudoku.generateGUI());
+		if(devMode){
+			$('[data-toggle="tooltip"]').tooltip();
+		}
 	}
 	//public interface
 	return{

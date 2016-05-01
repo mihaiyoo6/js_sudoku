@@ -3,8 +3,9 @@ body{
 	background-color: #bbb;
 }
 
-.board{
-	margin-top: 40px;
+.game-container{
+	max-width: 490px;
+	margin: 0 auto;
 }
 
 .board-row{
@@ -26,7 +27,6 @@ body{
 	z-index: 1;
 }
 
-.board-cell:hover,
 .board-cell:focus{
 	z-index: 3;
 	transform:scale(1.2);
@@ -61,4 +61,21 @@ body{
 	-ms-user-select: none;       /* Internet Explorer/Edge */
 	user-select: none;           /* Non-prefixed version, currently
                                   not supported by any browser */
+}
+
+@media screen and (max-width: 767px) {
+	.container{
+		padding: 0; !important;
+	}
+	.game-container{
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	.board-cell{
+		width: 10%;
+	}
+	.board-cell.big-border {
+		margin-left: 2%;
+	}
+
 }

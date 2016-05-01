@@ -6,6 +6,8 @@ let board = [];
 let boardLen = null;
 let positions = [];
 let mask = [];
+let answers = null;
+let devMode = false;
 let digits = [1,2,3,4,5,6,7,8,9];
 let letters = ['A','B','C','D','E','F','G','H','I'];
 
@@ -27,15 +29,18 @@ let selectors = {
 };
 module.exports = {
 	init,
-	generateGUI,
+	generateGUI
 };
 function init(config){
 
+	devMode = config.devMode;
 	boardGenerated = sudoku.generateSolution();
 	boardLen = boardGenerated.length;
 	positions = _generatePosArr();
 
 	mask =config.mask ? _generateMask(config.level) : mask;
+	answers = mask.length;
+
 }
 function generateGUI(){
 	let boardUI = [];
@@ -66,17 +71,28 @@ function generateGUI(){
 				"value": board[position],
 				"data-position": position,
 				"data-value": boardGenerated[p],
+				"data-toggle":"tooltip",
+				"data-placement":"top",
+				"title": boardGenerated[p],
 				"disabled": !isMaks,
 				"maxlength": 1,
+				"keydown": _removeValue,
 				"keypress": (e)=>{
 					//force only numbers & overite value if new value is number
-					if(e.charCode >= 49 && e.charCode <= 57){
+					if(e.charCode >= 49 && e.charCode <= 57 ){
 						e.target.value = String.fromCharCode(e.which);
+						_checkValue(e);
 					}else{
 						return false;
 					}
 				},
-				"keyup": _checkValue
+				'blur': (e)=>{
+					if(!e.target.value) {
+						$(e.target).removeClass('board-input-invalid');
+					}
+
+					_resetUi();
+				}
 			});
 			p++;
 			cells.push( cell );
@@ -89,15 +105,26 @@ function generateGUI(){
 	return boardUI;
 }
 
+function _removeValue(e){
+		if(e.keyCode == 8 ){
+			_resetUi();
+
+			let position = $(e.target).data('position');
+			board[position] = null;
+			answers++;
+			_updateGameStatus(answers);
+		}
+}
+
 function _checkValue(e){
-	console.log('change');
+
 	let target = $(e.target);
 	let value = parseInt(target.val());
 	let position = target.data('position');
 	let isColValid = _checkLine(position, value).col.valid;
 	let isRowValid = _checkLine(position, value).row.valid;
 	let isBlockValid = _checkBlock(position, value).block.valid;
-
+	board[position] = null;
 	console.log('isColValid', isColValid, 'isRowValid',isRowValid,'isBlockValid',isBlockValid);
 	_resetUi();
 
@@ -123,8 +150,34 @@ function _checkValue(e){
 	}
 	if(!isColValid || !isRowValid || !isBlockValid){
 		target.addClass('board-input-invalid');
+		answers ++;
+	}else{
+		target.removeClass('board-input-invalid');
+		board[position] = value;
+		answers --;
 	}
 
+	_updateGameStatus(answers);
+}
+
+function _updateGameStatus(answers){
+	if(answers < 0){
+		answers =0;
+	}
+	let maskLen = mask.length;
+	let procent = (maskLen - answers)*100 /maskLen;
+	if(procent < 0){
+		procent = 0;
+	}
+	procent += '%';
+	$('.js-game-progress').css('width', procent);
+	$('.js-game-progress').text(procent);
+
+	if(answers == 0){
+		alert('Congrats');
+	}
+
+	console.log('procent',procent);
 }
 
 function _checkLine(position, value){
@@ -178,7 +231,6 @@ function _checkBlock(position, value){
 function _resetUi(){
 	$('.js-cell').each((index, cellItem)=> {
 		$(cellItem).removeClass('board-cell-item-invalid')
-		$(cellItem).removeClass('board-input-invalid');
 	});
 }
 
@@ -213,6 +265,9 @@ function _generateMask(level){
 		level = 3;
 	}
 	let emptyCells = 13 + 17 * level;
+	if (devMode){
+		emptyCells = 2;
+	}
 	let emptyCellsPos = [];
 
 	while(emptyCells > 0){
