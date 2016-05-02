@@ -39,7 +39,7 @@ I used a number of open source projects to work properly:
  - Write Tests
  - fix bugs
  - save game status to localstorage
- - implement user count (login with social media)
+ - implement user account (login with social media)
  - share options
  - implement score
 
